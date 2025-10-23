@@ -3,11 +3,9 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-route
 import Navbar from "./components/Navbar";
 import SignUp from "./Pages/SignUp";
 import LogIn from "./Pages/LogIn";
-import Users from "./components/users";
-import Courses from "./components/courses";
-import Registrations from "./components/registrations";
 import CoursesPage from "./Pages/CoursesPage";
 import RegistrationsPage from "./Pages/RegistrationsPage";
+import HomePage from "./Pages/HomaPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -36,14 +34,7 @@ function AppContent() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LogIn onLogin = {handleLogin}/>} />
-          <Route path="/" element={
-            <>
-              <h1>Cognyss Portal</h1>
-              <Users />
-              <Courses />
-              <Registrations />
-            </>
-          } />
+          <Route path="/homepage" element={<HomePage/> } />
           <Route path="/coursespage" element={<CoursesPage />} />
           <Route path="/registrationspage" element={<RegistrationsPage />} />
         </Routes>

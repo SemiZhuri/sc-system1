@@ -1,0 +1,22 @@
+
+.mainbgi {
+    /* 1. Positioning and Sizing */
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;  /* Make it fit the full screen height */
+    width: 60vw;    /* Make it smaller, e.g., 60% of the screen width */
+
+    /* 2. Background Image Properties */
+    background-image: url(../images/feliphe-schiarolli-hes6nUC1MVc-unsplash.jpg);
+    background-size: cover;
+    background-position: center;
+    
+    /* 3. The Trapezoid Shape */
+    /* This creates a polygon with 4 points, slanting the left edge.
+       Format: polygon(x1 y1, x2 y2, x3 y3, x4 y4) */
+    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+
+    /* 4. Keep it in the background */
+    z-index: 100;
+}

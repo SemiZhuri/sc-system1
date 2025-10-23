@@ -37,7 +37,7 @@ const Navbar = ({ token, onLogout }) => {
     <nav>
       <ul>
         <li>
-          <Link to="/" className='linki'>Home</Link>
+          <Link to="/homepage" className='linki'>Home</Link>
         </li>
         {!token && (
         <li>

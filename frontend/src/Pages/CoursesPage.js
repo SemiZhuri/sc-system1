@@ -68,6 +68,12 @@ const CoursesPage = () => {
             }
         }
 
+        const getRandomColor = () => {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgba(${r}, ${g}, ${b}, 0.5)`; // 0.5 is the transparency
+        };
 
     return (
         <div>
@@ -106,15 +112,47 @@ const CoursesPage = () => {
             </Container>   
             <Container className="mt-4 d-flex flex-wrap justify-content-start">
             {courses.map(course => (
-                <Card key={course.id} bg = "light" text = "dark" border="secondary" 
+                
+                <Card key={course.id} bg = "light" text = "dark" border="light"
                 className="hover-card"
-                style={{width: '18rem', margin: '10px', height: '26rem', cursor: 'pointer', transition: 'transform 0.3s ease, box-shadow 0.3s ease'}}>
-                    <Card.Img variant="top" onClick={() => handleCourseClick(course)} src={`https://picsum.photos/seed/${course.id}/250/250?blur=3`} style={{height: '12rem'}}  />
+                style={{width: '25rem', margin: '10px', height: '26rem', cursor: 'pointer',
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'}}>
+                    <div style={{ position: 'relative', height: '12rem' }}>
+                        <Card.Img
+                            variant="top"
+                            onClick={() => handleCourseClick(course)}
+                            src={`https://api.dicebear.com/7.x/shapes/svg?seed=${course.id}`}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderTopLeftRadius: '20px',
+                                borderTopRightRadius: '20px'
+                            }}
+                        />
+                        <div
+                            onClick={() => handleCourseClick(course)}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: getRandomColor(),
+                                mixBlendMode: 'multiply',
+                                borderTopLeftRadius: '20px',
+                                borderTopRightRadius: '20px'
+                            }}
+                        ></div>
+                    </div>
                     <Card.Body onClick={() => handleCourseClick(course)}>
-                
-                    <Card.Title className="text-truncate">{course.title}</Card.Title>
+
+                    <Card.Title className="text-truncate" style={{fontSize: "26px"}}>{course.title}</Card.Title>
                     <Card.Text className="truncate-description">{course.description}</Card.Text>
-                
+
                 </Card.Body>
                 {(role === 'admin' || role === 'teacher') && (
                 <Card.Footer>
