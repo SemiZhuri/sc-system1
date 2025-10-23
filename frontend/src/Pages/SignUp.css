@@ -1,0 +1,55 @@
+html{
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+
+.suform{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.suHeader2{
+    text-align: center;
+    margin: 20px 0;
+    font-size: 60px;
+    font-style: bold;
+
+}
+
+.suform input{
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.suform button{
+    padding: 10px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.suform button:hover{
+    background-color: #218838;
+}
+
+.suform select{
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
