@@ -1,5 +1,8 @@
 const BASE_URL = "http://127.0.0.1:8000";
 
+const getToken = () => localStorage.getItem("token");
+
+
 export const fetchUsers = async () => {
   const res = await fetch(`${BASE_URL}/users/`);
   return res.json();
@@ -11,7 +14,13 @@ export const createUser = async (user) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   });
-  return res.json();
+  const data = await res.json();
+
+  if(!res.ok){
+    throw new Error(data.detail || "Something went wrong");
+  }else{
+    return data;
+  }
 };
 
 export const fetchCourses = async () => {
@@ -20,12 +29,26 @@ export const fetchCourses = async () => {
 };
 
 export const createCourse = async (course) => {
+  const token = getToken(); // ⬅️ Get the token
+  if (!token) {
+    throw new Error("User is not logged in."); // Optional check
+  }
+
   const res = await fetch(`${BASE_URL}/courses/`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" ,
+                "Authorization": `Bearer ${token}` 
+    },
+
     body: JSON.stringify(course),
   });
-  return res.json();
+  const data = await res.json();
+
+  if(!res.ok){
+    throw new Error(data.detail || "Something went wrong");
+  }else{
+    return data;
+  }
 };
 
 export const fetchRegistrations = async () => {
@@ -34,12 +57,27 @@ export const fetchRegistrations = async () => {
 };
 
 export const createRegistration = async (reg) => {
-  const res = await fetch(`${BASE_URL}/registrations/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reg),
-  });
-  return res.json();
+  const token = getToken(); // ⬅️ Get the token
+  if (!token) {
+    throw new Error("User is not logged in."); // Optional check
+  }
+
+   const res = await fetch(`${BASE_URL}/registrations/`, {
+   method: "POST",
+     headers: { 
+        "Content-Type": "application/json",
+        // 🚨 ADD THE AUTHORIZATION HEADER 🚨
+        "Authorization": `Bearer ${token}` 
+    }, 
+   body: JSON.stringify(reg),
+   });
+
+  const data = await res.json();
+  if(!res.ok){
+   throw new Error(data.detail || "Something went wrong");
+  }else{
+  return data;
+  }
 };
 
 export const loginUser = async (email, password) => {
@@ -83,15 +121,127 @@ export const logOutUser = () => {
 }
 
 export const deleteCourse = async (course_id) => {
+
+  const token = getToken(); // ⬅️ Get the token
+  
+  if (!token) {
+        throw new Error("Not authenticated. Please log in.");
+    }
+
   const res = await fetch(`${BASE_URL}/courses/${course_id}`, {
     method: "DELETE",
+     headers: {
+            "Content-Type": "courses/json",
+            // 2. 🚨 THE CRITICAL FIX: Add the Authorization header 🚨
+            "Authorization": `Bearer ${token}` 
+        },
+       
   });
-  return res.json();
+   const data = await res.json();
+
+   if(!res.ok){
+    throw new Error(data.detail || "Something went wrong");
+  }else{
+    return data;
+   }
 }
 
 export const deleteRegistrations = async (registrations_id) => {
+
+  const token = getToken(); // ⬅️ Get the token
+  
+
   const res = await fetch(`${BASE_URL}/registrations/${registrations_id}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "registrations/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    
   });
-  return res.json()
+  const data =  await res.json();
+
+  if(!res.ok){
+    throw new Error(data.detail || "Something went wrong");
+  }else{
+    return data;
+  }
+}
+
+
+export const fetchUserCourses = async (user_id) => {
+    // 1. Get the token, as this is a protected endpoint
+    const token = getToken(); 
+    
+    // Optional: Throw an error immediately if no token is found
+    if (!token) {
+        throw new Error("Not authenticated. Please log in.");
+    }
+
+    const res = await fetch(`${BASE_URL}/users/${user_id}/courses/`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            // 2. 🚨 THE CRITICAL FIX: Add the Authorization header 🚨
+            "Authorization": `Bearer ${token}` 
+        },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        // Handle server-side errors (like 401, 403, 404)
+        throw new Error(data.detail || "Could not fetch user courses.");
+    } else {
+        return data;
+    }
+}
+
+export const updateCourses = async (course_id, cour) => {
+  const token = getToken();
+
+  if(!token){
+    throw new Error("Not authenticated. Please log in.")
+  }
+
+  const res = await fetch(`${BASE_URL}/courses/${course_id}`, {
+    method: "PUT",
+    headers: {
+       "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` 
+    }, body: JSON.stringify(cour),
+  });
+
+  const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.detail || "Could not update course.");
+    } else {
+        return data;
+    }
+
+}
+
+export const fetchCourseById = async (course_id) => {
+  
+   const token = getToken();
+
+  if(!token){
+    throw new Error("Not authenticated. Please log in.")
+  }
+const res = await fetch(`${BASE_URL}/courses/${course_id}`, {
+    method: "GET",
+    headers: {
+       "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` 
+    },
+  });
+   const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.detail || "Could not update course.");
+    } else {
+        return data;
+    }
+
 }

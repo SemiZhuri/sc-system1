@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from "react";
-import { fetchCourses, createCourse, fetchRegistrations, createRegistration, getUserProfile, deleteCourse } from "../api/api";
+import { fetchCourses, createCourse, fetchRegistrations, createRegistration, getUserProfile, deleteCourse, updateCourses, fetchCourseById } from "../api/api";
 import "./CoursesPage.css";
 import { Modal, Button, Form, Card, Container} from "react-bootstrap";
 
@@ -13,6 +13,8 @@ const CoursesPage = () => {
         const [role, setRole] = useState(null);
         const [currentUser, setCurrentUser] = useState(null);
         const [registrations, setRegistrations] = useState([]);
+        const [updateMode, setUpdateMode] = useState([false]);
+        const [editingCourseId, setEditingCourseId] = useState(null);
     
     
         useEffect(() => {
@@ -32,13 +34,18 @@ const CoursesPage = () => {
 
         const handleAddButtonClick = () => {
             if (!addButton){
-            setAddButton(true);}
+            setAddButton(true);
+        }
             else{
                 setAddButton(false);
+                setEditingCourseId(null); 
+                setUpdateMode(false);
+                setForm({ title: "", description: "" });
             }
         };
 
         const handleDeleteCourse = async (course_id) => {
+            console.log("Deleting course with ID:", course_id, "with user token", localStorage.getItem("token"), "and role", role, "and current user", currentUser);
             await deleteCourse(course_id);
             setCourses(courses.filter(course => course.id !== course_id));
         }
@@ -50,17 +57,43 @@ const CoursesPage = () => {
             setForm({ title: "", description: "" });
         };
 
+       const handleUpdate = async (course_id) => {
+        try {
+          
+            const updatedCourse = await updateCourses(course_id, form);
+            setCourses(
+                courses.map(course => (course.id === course_id ? updatedCourse : course))
+            );
+            setForm({ title: "", description: "" });
+            setUpdateMode(false);
+            setEditingCourseId(null); 
+        } catch (error) {
+            console.error("Failed to update course:", error);
+        }
+    };
+
+        const updateButtonClick = (course) => {
+              if (!addButton){
+            setAddButton(true);}
+            else{
+                setAddButton(false);
+            }
+            setUpdateMode(true);
+            setEditingCourseId(course);
+            fetchCourseById(course).then(data => setForm({title: data.title, description: data.description}));
+        }
+
         const handleCourseClick = (course) => {
             setSelectedCourse(course);
         }
 
         const handleCloseModal = () => {
             setSelectedCourse(null);
+            setEditingCourseId(null); 
         }
 
         const handleEnroll = async () => {
             if (currentUser && selectedCourse) {
-                
                 const newRegistration = await createRegistration({ user_id: currentUser.id, course_id: selectedCourse.id });
                 setRegistrations([...registrations, newRegistration]);
                 console.log("Enrolled successfully with registration:", newRegistration);
@@ -76,7 +109,8 @@ const CoursesPage = () => {
         };
 
     return (
-        <div>
+        <div className="main-div-courses">
+            <Container className="mt-4 d-flex flex-wrap justify-content-start courses-list-container">
             <Container className="d-flex justify-content-center align-items-center mt-4 mr-4 gap-4">
             <h2>Courses</h2>
             <Button onClick={handleAddButtonClick}>Add Course</Button>
@@ -86,7 +120,15 @@ const CoursesPage = () => {
                         <Modal.Title>Add Course</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                <Form onSubmit={handleSubmit}>
+                    
+                <Form onSubmit={(e) => {
+                    e.preventDefault(); // Prevent page reload
+                    if (updateMode) {
+                        handleUpdate(editingCourseId); // Use the ID you stored in state
+                    } else {
+                        handleSubmit(e);
+                    }
+                }}>
                     <Form.Group className="mb-3">
                 <Form.Control
                     placeholder="Title" 
@@ -104,13 +146,13 @@ const CoursesPage = () => {
                 />
                 </Form.Group>
                 <div className = "d-flex justify-content-end" >
-                <Button variant="primary" type="submit">Add Course</Button>
+                <Button variant="primary" type="submit">{updateMode ? "Update" : "Add Course"}</Button>
                 </div>
             </Form>
             </Modal.Body>
             </Modal>  
             </Container>   
-            <Container className="mt-4 d-flex flex-wrap justify-content-start">
+            
             {courses.map(course => (
                 
                 <Card key={course.id} bg = "light" text = "dark" border="light"
@@ -156,10 +198,14 @@ const CoursesPage = () => {
                 </Card.Body>
                 {(role === 'admin' || role === 'teacher') && (
                 <Card.Footer>
-                    <div className="d-flex justify-content-end">
+                    <div className="d-flex justify-content-end gap-1">
+                        <Button variant="primary" onClick={() => updateButtonClick(course.id)}>
+                            Edit
+                        </Button>
                         <Button variant="danger" onClick={() => handleDeleteCourse(course.id)}>
                             Delete
                         </Button>
+                        
                         </div>
                 </Card.Footer>
             )}
@@ -189,12 +235,6 @@ const CoursesPage = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-             {registrations.map(r => (
-                <div key={r.id}>
-                    {r.user_id} - {r.course_id}
-                </div>
-            ))}
-
         </div>
     )
   

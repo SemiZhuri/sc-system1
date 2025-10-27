@@ -52,6 +52,11 @@ const Navbar = ({ token, onLogout }) => {
         <li>
           <Link to="/coursespage" className='linki'>Courses</Link>
         </li>
+        {token && role === 'student' && (
+        <li>
+          <Link to="/mycoursespage" className='linki'>My Courses</Link>
+        </li>
+        )}
         {token && role !== 'student' && (
         <li>
           <Link to="/registrationspage" className='linki'>Registrations</Link>

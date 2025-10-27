@@ -11,14 +11,15 @@ const HomePage = () => {
 
             {/* This div is the container for your text content on the left */}
             <div style={{
-                height: '90vh',
+                height: '92vh',
                 width: '45%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'flex-start',
                 paddingLeft: '5rem',
-                paddingRight: '2rem'
+                paddingRight: '2rem',
+               
             }}>
                 <h1 style={{ fontSize: "3.5rem", fontWeight: 'bold' }}>
                     Student Management System
