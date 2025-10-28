@@ -45,6 +45,12 @@ class UserCreate(BaseModel):
     role: models.roleEnum
     password: str = Field(..., min_length=8)
 
+class UserUpdate(BaseModel):
+    name: str | None = None
+    email: EmailStr | None = None
+    role: models.roleEnum | None = None
+    password: str | None = Field(None, min_length=8)
+
 
 @router.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -99,6 +105,50 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     
     print(f"User: {user.email}, Role: {user.role}")
     return user
+
+@router.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in [models.roleEnum.ADMIN]:
+        raise HTTPException(status_code=403, detail="Permission denied")
+    
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+
+
+@router.put("/users/{user_id}")
+def update_user(user_id: int, updated_user: UserUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in [models.roleEnum.ADMIN]:
+        raise HTTPException(status_code=403, detail="Permission denied")
+    
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    update_data = updated_user.dict(exclude_unset=True)
+
+    if 'email' in update_data and update_data['email'] != user.email:
+        existing_user = db.query(models.User).filter(models.User.email == update_data['email']).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+
+    if 'password' in update_data and update_data['password']:
+        hashed_password = pwd_context.hash(update_data['password'])
+        update_data['password'] = hashed_password
+    elif 'password' in update_data:
+        del update_data['password']
+
+    for key, value in update_data.items():
+        setattr(user, key, value)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
 
 class CourseCreate(BaseModel):
     title: str

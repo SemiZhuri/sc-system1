@@ -1,0 +1,41 @@
+.registrations-container {
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.registrations-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.registrations-header h2 {
+  font-weight: 600;
+  color: #333;
+}
+
+.registrations-table {
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.registrations-table th {
+  background-color: #0d6efd;
+  color: white;
+  text-align: center;
+}
+
+.registrations-table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

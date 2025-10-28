@@ -168,6 +168,56 @@ export const deleteRegistrations = async (registrations_id) => {
   }
 }
 
+export const updateUser = async (user_id, user) => {
+    const token = getToken();
+    if (!token) {
+        throw new Error("Not authenticated. Please log in.");
+    }
+
+    const res = await fetch(`${BASE_URL}/users/${user_id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error(data.detail || "Could not update user.");
+    } else {
+        return data;
+    }
+}
+
+export const deleteUser = async (user_id) => {
+    const token = getToken();
+    if (!token) {
+        throw new Error("Not authenticated. Please log in.");
+    }
+
+    const res = await fetch(`${BASE_URL}/users/${user_id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    });
+
+    if (res.status === 204) {
+        return { message: "User deleted successfully" };
+    }
+
+
+    const data = await res.json();
+    if (!res.ok) {
+        throw new Error(data.detail || "Could not delete user.");
+    } else {
+        return data;
+    }
+}
+
 
 export const fetchUserCourses = async (user_id) => {
     // 1. Get the token, as this is a protected endpoint

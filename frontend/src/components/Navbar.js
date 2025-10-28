@@ -1,7 +1,7 @@
 import React, { useEffect , useState}from 'react';
-import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { getUserProfile } from '../api/api';
+import { NavLink } from 'react-router-dom';
 
 const Navbar = ({ token, onLogout }) => {
     const [user, setUser] = useState(null);
@@ -30,37 +30,40 @@ const Navbar = ({ token, onLogout }) => {
     }, [token]); 
 
 
-
-
   return (
     
     <nav>
       <ul>
         <li>
-          <Link to="/homepage" className='linki'>Home</Link>
+          <NavLink to="/homepage" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Home</NavLink>
         </li>
         {!token && (
         <li>
-          <Link to="/signup" className='linki'>Sign Up</Link>
+          <NavLink to="/signup" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Sign Up</NavLink>
         </li>
         )}
         {!token && (
         <li>
-          <Link to="/login" className='linki'>Log In</Link>
+          <NavLink to="/login" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Log In</NavLink>
         </li>
         )}
         <li>
-          <Link to="/coursespage" className='linki'>Courses</Link>
+          <NavLink to="/coursespage" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Courses</NavLink>
         </li>
         {token && role === 'student' && (
         <li>
-          <Link to="/mycoursespage" className='linki'>My Courses</Link>
+          <NavLink to="/mycoursespage" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>My Courses</NavLink>
         </li>
         )}
         {token && role !== 'student' && (
         <li>
-          <Link to="/registrationspage" className='linki'>Registrations</Link>
+          <NavLink to="/registrationspage" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Registrations</NavLink>
         </li>
+        )}
+        {token && role === 'admin' && (
+          <li>
+            <NavLink to="adminpage" className={({ isActive }) => isActive ? 'linki active' : 'linki'}>Admin Page</NavLink>
+          </li>
         )}
         {token && (
           <li className='linki'>

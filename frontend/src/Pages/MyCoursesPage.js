@@ -1,6 +1,7 @@
 import React, {useState, useEffect, use} from "react";
 import { fetchUserCourses, deleteRegistrations, getUserProfile, fetchRegistrations } from "../api/api";
 import { Modal, Button, Form, Card, Container} from "react-bootstrap";
+import "./MyCoursesPage.css";
 
 const MyCoursesPage = () => {
     const [userCourses, setUserCourses] = useState([]);
@@ -56,15 +57,11 @@ const MyCoursesPage = () => {
     
 
     return(
-        <div>
-            <div 
-                style={{display: "flex",
-                justifyContent: "center",
-                alignContent: "center"
-            }}>
-            <h2>My Courses</h2>
-            </div>
-              <Container className="mt-4 pb-4 d-flex flex-wrap justify-content-start">
+        <div className="main-div-mycourses">
+            <Container className="mt-4 pb-4 d-flex flex-wrap justify-content-start courses-list-container">
+                <Container className="d-flex justify-content-center align-items-center mt-4 mr-4 gap-4 w-100">
+                    <h2>My Courses</h2>
+                </Container>
                         {userCourses.map(course => (
                             
                             <Card key={course.id} bg = "light" text = "dark" border="light"

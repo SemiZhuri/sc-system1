@@ -7,6 +7,7 @@ import CoursesPage from "./Pages/CoursesPage";
 import RegistrationsPage from "./Pages/RegistrationsPage";
 import HomePage from "./Pages/HomaPage";
 import MyCoursesPage from "./Pages/MyCoursesPage";
+import AdminPage from "./Pages/AdminPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -39,6 +40,7 @@ function AppContent() {
           <Route path="/coursespage" element={<CoursesPage />} />
           <Route path="/registrationspage" element={<RegistrationsPage />} />
           <Route path="/mycoursespage" element={<MyCoursesPage />} />
+          <Route path="/adminpage" element={<AdminPage />} />
         </Routes>
       </div>
   

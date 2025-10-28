@@ -1,0 +1,112 @@
+.registrations-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.courses-header {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.courses-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.course-btn {
+  transition: all 0.25s ease-in-out;
+  border-radius: 25px !important;
+  padding: 8px 18px;
+  font-weight: 500;
+}
+
+.course-btn:hover {
+  transform: scale(1.05);
+  background-color: #212529;
+  color: #fff;
+}
+
+.course-btn.active {
+  background-color: #212529 !important;
+  color: white !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.registrations-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 700px;
+}
+
+.registrations-title {
+  margin-bottom: 25px;
+  font-size: 1.25rem;
+  color: #343a40;
+}
+
+.course-name {
+  font-weight: 600;
+  color: #000;
+}
+
+.table-wrapper {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.registrations-table {
+  margin-bottom: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.registrations-table th {
+  background-color: #212529;
+  color: #fff;
+  text-align: center;
+}
+
+.registrations-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.delete-btn {
+  transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+  transform: scale(1.05);
+  background-color: #c82333 !important;
+}
+
+.no-course-selected {
+  text-align: center;
+  margin-top: 40px;
+  color: #6c757d;
+}
+
+.no-course-selected p {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.no-registrations {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
