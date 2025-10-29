@@ -52,8 +52,28 @@ class UserUpdate(BaseModel):
     password: str | None = Field(None, min_length=8)
 
 
+# Define an optional auth scheme for the user creation endpoint
+optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
+
+def get_optional_current_user(token: str | None = Depends(optional_oauth2_scheme), db: Session = Depends(get_db)):
+    if token is None:
+        return None
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+        email: str = payload.get("sub")
+        if email is None:
+            return None
+        user = db.query(models.User).filter(models.User.email == email).first()
+        return user
+    except JWTError:
+        return None
+
 @router.post("/users/")
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(user: UserCreate, db: Session = Depends(get_db), current_user: models.User | None = Depends(get_optional_current_user)):
+    if user.role == models.roleEnum.ADMIN:
+        if not current_user or current_user.role != models.roleEnum.ADMIN:
+            raise HTTPException(status_code=403, detail="Only an admin can create another admin user.")
+
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
