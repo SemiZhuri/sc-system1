@@ -1,7 +1,7 @@
 from enum import Enum
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum as SqlEnum
 from sqlalchemy.orm import relationship
-from .database import Base
+from database import Base
 
 class roleEnum(str, Enum):
     STUDENT = "student"

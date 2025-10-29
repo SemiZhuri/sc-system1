@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .database import Base, engine
-from . import endpoints # Import the endpoints module
+from database import Base, engine
+import endpoints # Import the endpoints module
 from fastapi.middleware.cors import CORSMiddleware # Import CORS middleware
 
 Base.metadata.create_all(bind=engine)
