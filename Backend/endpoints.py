@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import APIRouter, HTTPException, Depends
-import models
-from database import SessionLocal
+from . import models
+from .database import SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr, Field
 from passlib.context import CryptContext
