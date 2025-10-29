@@ -10,6 +10,7 @@ app = FastAPI()
 # Define allowed origins for CORS
 origins = [
     "http://localhost:3000",
+    "https://sc-system1.vercel.app",
 ]
 
 # Add CORS middleware to the application
