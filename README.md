@@ -4,6 +4,8 @@ A full-stack web application that allows administrators, teachers, and students 
 
 This project is designed to demonstrate clean architecture, RESTful API design, authentication with JWT, and role-based access control — built to simulate a small educational management system.
 
+Check live demo: https://sc-system1.vercel.app/homepage
+
 ---
 
 ## 🚀 Tech Stack
@@ -59,7 +61,7 @@ pip install -r requirements.txt
 
 uvicorn main:app --reload
 
-###Frontend
+### Frontend
 
 1. Navigate to the frontend folder:
 
