@@ -132,8 +132,10 @@ const CoursesPage = () => {
             <Container className="mt-4 d-flex flex-wrap justify-content-start courses-list-container">
             <Container className="d-flex justify-content-center align-items-center mt-4 mr-4 gap-4">
             <h2>Courses</h2>
-            <Button onClick={handleAddButtonClick}>Add Course</Button>
-            
+            {currentUser !== null && (role === 'admin' || role === 'teacher') && (
+                <Button onClick={handleAddButtonClick}>Add Course</Button>
+            )}
+
                 <Modal show={addButton} onHide={handleAddButtonClick} centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Add Course</Modal.Title>
