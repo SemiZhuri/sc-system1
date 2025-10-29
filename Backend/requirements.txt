@@ -1,6 +1,6 @@
 fastapi
 SQLAlchemy
-pydantic
+pydantic[email]
 passlib[bcrypt]
 python-jose[cryptography]
 python-dotenv
