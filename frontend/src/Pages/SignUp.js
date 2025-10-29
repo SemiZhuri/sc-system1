@@ -35,7 +35,13 @@ const SignUp = () => {
     }
 
     try{
-    const newUser = await createUser(form);
+    const userData = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      role: form.role,
+      password: form.password.trim()
+    }
+    const newUser = await createUser(userData);
     setUsers([...users, newUser]);
     setForm({ name: "", email: "", role: "student" , password: ""});
     setError({});

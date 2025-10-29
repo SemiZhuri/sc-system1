@@ -11,7 +11,7 @@ const HomePage = () => {
 
             {/* This div is the container for your text content on the left */}
             <div style={{
-                height: '92vh',
+                height: '92.6vh',
                 width: '45%',
                 display: 'flex',
                 flexDirection: 'column',

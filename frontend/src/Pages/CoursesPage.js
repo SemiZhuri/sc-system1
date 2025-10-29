@@ -1,7 +1,8 @@
-import React,{useEffect, useState} from "react";
+import React,{useEffect, useState, useMemo} from "react";
 import { fetchCourses, createCourse, fetchRegistrations, createRegistration, getUserProfile, deleteCourse, updateCourses, fetchCourseById } from "../api/api";
 import "./CoursesPage.css";
 import { Modal, Button, Form, Card, Container} from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 
 
@@ -13,8 +14,9 @@ const CoursesPage = () => {
         const [role, setRole] = useState(null);
         const [currentUser, setCurrentUser] = useState(null);
         const [registrations, setRegistrations] = useState([]);
-        const [updateMode, setUpdateMode] = useState([false]);
+        const [updateMode, setUpdateMode] = useState(null);
         const [editingCourseId, setEditingCourseId] = useState(null);
+        const [error, setError] = useState(null);
     
     
         useEffect(() => {
@@ -51,26 +53,33 @@ const CoursesPage = () => {
         }
     
         const handleSubmit = async (e) => {
-            e.preventDefault();
-            const newCourse = await createCourse(form);
-            setCourses([...courses, newCourse]);
-            setForm({ title: "", description: "" });
+        e.preventDefault();
+        const courseData = {
+            title: form.title.trim(),
+            description: form.description.trim()
+        };
+        const newCourse = await createCourse(courseData);
+        setCourses([...courses, newCourse]);
+        setForm({ title: "", description: "" });
         };
 
        const handleUpdate = async (course_id) => {
         try {
-          
-            const updatedCourse = await updateCourses(course_id, form);
+            const courseData = {
+                title: form.title.trim(),
+                description: form.description.trim()
+            };
+            const updatedCourse = await updateCourses(course_id, courseData);
             setCourses(
                 courses.map(course => (course.id === course_id ? updatedCourse : course))
             );
             setForm({ title: "", description: "" });
             setUpdateMode(false);
-            setEditingCourseId(null); 
+            setEditingCourseId(null);
         } catch (error) {
-            console.error("Failed to update course:", error);
+            setError({ message: error.message });
         }
-    };
+        };
 
         const updateButtonClick = (course) => {
               if (!addButton){
@@ -90,14 +99,22 @@ const CoursesPage = () => {
         const handleCloseModal = () => {
             setSelectedCourse(null);
             setEditingCourseId(null); 
+            setError(null);
         }
 
         const handleEnroll = async () => {
+            try{
             if (currentUser && selectedCourse) {
+                const isEnrolled = registrations.some(registration => registration.course_id === selectedCourse.id && registration.user_id === currentUser.id);
+                if (isEnrolled) {
+                    setError({ e: "You are already enrolled in this course" });
+                    return;
+                }
                 const newRegistration = await createRegistration({ user_id: currentUser.id, course_id: selectedCourse.id });
                 setRegistrations([...registrations, newRegistration]);
                 console.log("Enrolled successfully with registration:", newRegistration);
-           
+            }}catch(error){
+                console.error("Failed to enroll:", error);
             }
         }
 
@@ -107,6 +124,8 @@ const CoursesPage = () => {
         const b = Math.floor(Math.random() * 256);
         return `rgba(${r}, ${g}, ${b}, 0.5)`; // 0.5 is the transparency
         };
+
+        const randomColor = useMemo(() => getRandomColor(), [courses]);
 
     return (
         <div className="main-div-courses">
@@ -183,7 +202,7 @@ const CoursesPage = () => {
                                 left: 0,
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: getRandomColor(),
+                                backgroundColor: randomColor,
                                 mixBlendMode: 'multiply',
                                 borderTopLeftRadius: '20px',
                                 borderTopRightRadius: '20px'
@@ -218,6 +237,7 @@ const CoursesPage = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <p>{selectedCourse ? selectedCourse.description : ''}</p>
+                    {error && <Alert variant="danger">{error.e}</Alert>}
                 </Modal.Body>
                 <Modal.Footer>
                     {currentUser !== null && role === 'student' && (
@@ -230,6 +250,7 @@ const CoursesPage = () => {
                             Delete
                         </Button>
                     )}
+                    
                     <Button variant="danger" onClick={handleCloseModal}>
                         Close
                     </Button>

@@ -31,15 +31,21 @@ export default function Users() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const userData = {
+      ...form,
+      name: form.name.trim(),
+      email: form.email.trim()
+    };
+
     if (editingUser) {
-      const payload = { ...form };
-      if (!payload.password) {
-        delete payload.password;
+      if (!userData.password) {
+        delete userData.password;
       }
-      const updatedUser = await updateUser(editingUser.id, payload);
+      const updatedUser = await updateUser(editingUser.id, userData);
       setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
     } else {
-      const newUser = await createUser(form);
+      const newUser = await createUser(userData);
       setUsers([...users, newUser]);
     }
     handleCloseModal();

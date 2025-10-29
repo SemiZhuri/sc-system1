@@ -8,6 +8,7 @@ import RegistrationsPage from "./Pages/RegistrationsPage";
 import HomePage from "./Pages/HomaPage";
 import MyCoursesPage from "./Pages/MyCoursesPage";
 import AdminPage from "./Pages/AdminPage";
+import Footer from "./components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -42,6 +43,7 @@ function AppContent() {
           <Route path="/mycoursespage" element={<MyCoursesPage />} />
           <Route path="/adminpage" element={<AdminPage />} />
         </Routes>
+        <Footer />
       </div>
   
   );
